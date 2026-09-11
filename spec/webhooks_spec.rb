@@ -4,7 +4,7 @@ require "spec_helper"
 require "openssl"
 require "json"
 
-RSpec.describe Integrobr::NfseSdk::Webhooks do
+RSpec.describe Sudrel::NfseSdk::Webhooks do
   let(:segredo) { "segredo-do-webhook" }
   let(:corpo) { JSON.generate({ "tipo" => "NOTA_RECEBIDA", "dados" => { "id" => "1" } }) }
 

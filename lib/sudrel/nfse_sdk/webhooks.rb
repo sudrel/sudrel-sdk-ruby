@@ -2,19 +2,19 @@
 
 require "openssl"
 
-module Integrobr
+module Sudrel
   module NfseSdk
     module Webhooks
       module_function
 
-      # Verifica a assinatura HMAC-SHA256 (cabeçalho `X-IntegroBR-Signature`)
+      # Verifica a assinatura HMAC-SHA256 (cabeçalho `X-Sudrel-Signature`)
       # de uma entrega de webhook, comparando em tempo constante pra evitar
       # ataques de timing.
       #
       # @param corpo_bruto [String] corpo bruto exatamente como recebido —
       #   não o objeto já parseado, já que reserializar JSON pode mudar a
       #   ordem/espaçamento e invalidar a assinatura.
-      # @param assinatura_recebida [String] valor do cabeçalho `X-IntegroBR-Signature`.
+      # @param assinatura_recebida [String] valor do cabeçalho `X-Sudrel-Signature`.
       # @param segredo [String] segredo do webhook, obtido na criação (ou
       #   rotação) dele pelo painel — só é exibido uma vez.
       # @return [Boolean]

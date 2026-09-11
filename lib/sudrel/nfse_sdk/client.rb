@@ -4,16 +4,16 @@ require "net/http"
 require "uri"
 require "json"
 
-module Integrobr
+module Sudrel
   module NfseSdk
-    # Cliente oficial da API pública do IntegroBR NFS-e Recebidas.
+    # Cliente oficial da API pública da Sudrel NFS-e Recebidas.
     #
-    #   client = Integrobr::NfseSdk::Client.new(api_key: ENV.fetch("INTEGROBR_API_KEY"))
+    #   client = Sudrel::NfseSdk::Client.new(api_key: ENV.fetch("SUDREL_API_KEY"))
     #   empresas = client.listar_empresas
     class Client
-      BASE_URL_PADRAO = "https://api.recebidas.integrobr.com/api"
+      BASE_URL_PADRAO = "https://api.sudrel.com.br/api"
 
-      # @param api_key [String] chave de API — `ibr_live_...` (produção) ou `ibr_test_...` (sandbox).
+      # @param api_key [String] chave de API — `sdr_live_...` (produção) ou `sdr_test_...` (sandbox).
       # @param base_url [String] sobrescreve a URL base — usado só em testes/desenvolvimento.
       # @param timeout [Integer] timeout por requisição, em segundos.
       # @param transporte [#call, nil] função de transporte HTTP customizada — usada em testes.

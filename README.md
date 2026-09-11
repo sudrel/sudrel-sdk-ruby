@@ -1,28 +1,28 @@
-# integrobr-nfse-sdk (Ruby)
+# sudrel-nfse-sdk (Ruby)
 
-Cliente oficial Ruby para a [API pública do IntegroBR NFS-e Recebidas](https://recebidas.integrobr.com/docs) — consulte e gerencie, de forma programática, as NFS-e (notas de serviço) monitoradas pela sua conta IntegroBR.
+Cliente oficial Ruby para a [API pública da Sudrel NFS-e Recebidas](https://sudrel.com.br/docs) — consulte e gerencie, de forma programática, as NFS-e (notas de serviço) monitoradas pela sua conta Sudrel.
 
-- Documentação completa da API: **https://recebidas.integrobr.com/docs**
+- Documentação completa da API: **https://sudrel.com.br/docs**
 - Requer Ruby **3.0+**. Usa só `net/http` da stdlib — sem dependências de runtime.
 
 ## Instalação
 
 ```bash
-gem install integrobr-nfse-sdk
+gem install sudrel-nfse-sdk
 ```
 
 Ou no `Gemfile`:
 
 ```ruby
-gem "integrobr-nfse-sdk"
+gem "sudrel-nfse-sdk"
 ```
 
 ## Uso rápido
 
 ```ruby
-require "integrobr/nfse_sdk"
+require "sudrel/nfse_sdk"
 
-client = Integrobr::NfseSdk::Client.new(api_key: ENV.fetch("INTEGROBR_API_KEY"))
+client = Sudrel::NfseSdk::Client.new(api_key: ENV.fetch("SUDREL_API_KEY"))
 
 conta = client.obter_conta
 puts "#{conta['nome']} #{conta['ambiente']}" # "Empresa Exemplo LTDA PRODUCAO"
@@ -35,8 +35,8 @@ Gere uma chave em **Painel → Chaves de API** (`/painel/chaves-api`). Ela só �
 
 | Prefixo | Ambiente |
 |---|---|
-| `ibr_test_...` | Sandbox — dados de teste, nunca reais, nunca geram cobrança. |
-| `ibr_live_...` | Produção — dados fiscais reais da sua conta. |
+| `sdr_test_...` | Sandbox — dados de teste, nunca reais, nunca geram cobrança. |
+| `sdr_live_...` | Produção — dados fiscais reais da sua conta. |
 
 ## Empresas (CNPJs monitorados)
 
@@ -103,12 +103,12 @@ end
 
 ## Tratamento de erros
 
-Toda chamada que falha levanta `Integrobr::NfseSdk::ApiError`, com `status_code`, `mensagens` (sempre um array, mesmo quando a API devolve uma string única) e predicados pros casos mais comuns:
+Toda chamada que falha levanta `Sudrel::NfseSdk::ApiError`, com `status_code`, `mensagens` (sempre um array, mesmo quando a API devolve uma string única) e predicados pros casos mais comuns:
 
 ```ruby
 begin
   client.obter_empresa("id-que-nao-existe")
-rescue Integrobr::NfseSdk::ApiError => e
+rescue Sudrel::NfseSdk::ApiError => e
   if e.nao_encontrado?
     # 404 — não existe nesta conta, ou existe só no outro ambiente (sandbox/produção)
   end
@@ -121,17 +121,17 @@ end
 
 ## Webhooks
 
-Configure webhooks pelo painel (**Painel → Webhooks**) pra ser avisado em tempo real (`NOTA_RECEBIDA`, `EVENTO_FISCAL_RECEBIDO`) em vez de ficar consultando `GET /documents`. Cada entrega assina o corpo com HMAC-SHA256 no cabeçalho `X-IntegroBR-Signature` — **sempre verifique antes de confiar no payload**:
+Configure webhooks pelo painel (**Painel → Webhooks**) pra ser avisado em tempo real (`NOTA_RECEBIDA`, `EVENTO_FISCAL_RECEBIDO`) em vez de ficar consultando `GET /documents`. Cada entrega assina o corpo com HMAC-SHA256 no cabeçalho `X-Sudrel-Signature` — **sempre verifique antes de confiar no payload**:
 
 ```ruby
-require "integrobr/nfse_sdk"
+require "sudrel/nfse_sdk"
 
 # Exemplo com Sinatra — o importante é ler o corpo BRUTO, não decodificado
-post "/webhooks/integrobr" do
+post "/webhooks/sudrel" do
   corpo_bruto = request.body.read
-  assinatura = request.env["HTTP_X_INTEGROBR_SIGNATURE"] || ""
+  assinatura = request.env["HTTP_X_SUDREL_SIGNATURE"] || ""
 
-  valido = Integrobr::NfseSdk::Webhooks.verificar_assinatura(corpo_bruto, assinatura, ENV.fetch("INTEGROBR_WEBHOOK_SECRET"))
+  valido = Sudrel::NfseSdk::Webhooks.verificar_assinatura(corpo_bruto, assinatura, ENV.fetch("SUDREL_WEBHOOK_SECRET"))
   halt 401, "assinatura inválida" unless valido
 
   payload = JSON.parse(corpo_bruto)

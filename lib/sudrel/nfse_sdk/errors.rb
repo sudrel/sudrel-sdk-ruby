@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module Integrobr
+module Sudrel
   module NfseSdk
-    # Erro devolvido pela API pública do IntegroBR — sempre no formato
+    # Erro devolvido pela API pública da Sudrel — sempre no formato
     # `{ statusCode, message, error }`, onde `message` pode ser uma string
     # única ou uma lista (um item por campo inválido, em erros 400).
     class ApiError < StandardError

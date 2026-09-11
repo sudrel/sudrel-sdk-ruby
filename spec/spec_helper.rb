@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "integrobr/nfse_sdk"
+require "sudrel/nfse_sdk"
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
